@@ -37,6 +37,15 @@ We create a dataset of children for the Transfer Learning, and optionally one ab
 ![alt text](https://github.com/Abokyy/ThisNoAll-DL-HomeWork/blob/main/assets/kid.jpg?raw=true)
 ![alt text](https://github.com/Abokyy/ThisNoAll-DL-HomeWork/blob/main/assets/minnine.jpg?raw=true)
 
+For that we can use the following datasets:
+
+http://buff.is.tue.mpg.de/
+http://faust.is.tue.mpg.de/
+
+Or we can choose any other from this, beacause this is for research purposes:
+
+http://homepages.inf.ed.ac.uk/rbf/CVonline/Imagedbase.htm#people
+
 # Measure the distance:
 After we detect the people on the video we have to determine the distance between them. If we draw a rectangle around every people, we can say that the center of the bottom side is where they are, so the distances between these centers are the distances between the people. A picture for demonstration:
 
