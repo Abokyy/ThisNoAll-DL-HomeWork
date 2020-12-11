@@ -1,0 +1,65 @@
+\documentclass[12pt,a4paper,oneside]{report}
+
+%\usepackage[letterspace=200]{microtype}
+%\usepackage{kantlipsum}
+% nagyon sok kép esetén meggyorsítható a fordítás a draft móddal
+% \documentclass[12pt,a4paper,oneside,draft]{report}
+% ekkor a képek nem renderelődnek ki, csak placeholder lesz mérethelyesen
+\usepackage[utf8]{inputenc} % mindenképp maradjon az utf-8 kódolás
+%\usepackage[magyar]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphics} % grafikus elemek, képek berakásához
+\usepackage{epsfig} % eps importáláshoz
+\usepackage{listings}
+\usepackage{sectsty}
+\usepackage{enumerate}
+\usepackage{lastpage}
+\usepackage{pdfpages}
+\usepackage{booktabs}
+\usepackage{setspace}
+\usepackage{hyperref} % PDF hivatkozásokhoz kell
+\usepackage[hang]{caption}
+\usepackage{titling} % a title, author parancsok szabad használatához
+\usepackage{indentfirst}
+% a TikZ rajzoló modul, és a kapcsolási rajz készítő modul, ha kell
+%\usepackage{tikz}
+%\usepackage{circuitikz}
+\usepackage{dirtytalk}
+\usepackage{mathptmx}
+\usepackage{cleveref}
+\usepackage{graphics}
+
+\crefname{lemma}{lemma}{abra}
+\Crefname{lemma}{Lemma}{Kep}
+\crefname{thm}{theorem}{theorems}
+\Crefname{thm}{Theorem}{Theorems}
+
+% az A4 oldal margóinak és méreteinek beállítása
+\usepackage[left=25mm,right=25mm,top=20mm,bottom=25mm]{geometry}\pagestyle{plain}
+
+% A sorköz távolság beállítása
+% egyszeres sorköz
+% \singlespacing
+% 1,5 sorköz
+\onehalfspacing
+
+\hypersetup
+{
+  	colorlinks,
+  	citecolor=black,
+ 	linkcolor=black,
+  	urlcolor=black
+}
+
+\begin{document}
+
+  
+\include{altalanos}
+\bibliography{bibirod} 
+\bibliographystyle{ieeetr}
+
+
+\end{document}
