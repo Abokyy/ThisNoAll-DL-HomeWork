@@ -1,5 +1,13 @@
 # ThisNoAll-DL-HomeWork
 
+Contirbutors (name, NEPTUN, workload):
+
+Makara László Árpád G5YPX8 33%
+
+Varsányi Botond AJ0PTT 33%
+
+Sáfrán Gergely FT6QWV 33%
+
 # English version:
 
 # Estimating the distance between people on public spaces based on neural networks
