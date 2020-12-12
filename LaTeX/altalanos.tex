@@ -23,7 +23,7 @@ can solve this is why we chose the path leading to neural networks.
 %A sociális távolság meghatározásához több lehetősgünk van. Mi egy olyan megoldást kerestünk ami unverzális lehet olyan értelemben, hogy egyaránt tud képeken becslést és videón is végezni. Ezt úgy tudtuk elérni, hogy a vizsgált videó cikkelyt képszeletekre bontjuk és képként dolgozzuk fel az egyes képkockákat. Ezután a képkockákon végezzük el az általunk választott és tovább tanított modellel a feldolgozást. Az általunk választott model a Detectron2~\cite{detectron2} ami a Pytorh~\cite{pytorch} frameworkben könnyedén használható. A Pythorch framework a Facebook AI csapata által készített ingyenesen elérhető open-source keretrendszere. Megvizsgáltunk egyéb lehetőségeket is miként lehetne Tensorflow~\cite{tensorflow} alatt modelt betanítani hasonló megoldásokra, viszont a Pytorch egyszerűsége miatt erre esett a választásunk. Megvizsgáltuk az OpenCV~\cite{opencv}-vel való kevésbé intelligens megoldási lehetőségeket, ami pusztán csak a Fourier transzformációból adódó éldetektáció után előálló körvonalakból dolgozik csak. Ennél számos probléma felmerülhet, amit mind ki tud küszöbölni egy neurális hálózat, ezért is választottuk a neurális hálózat felé vezető utat. 
 
 % \section{Flow Measurement Data}
-\Chapter{Implementation}
+\chapter{Implementation}
 %A következő részben szeretnénk a megoldás implementálását bemutatni, ezek segítségével pontosabb rálátást biztosítani a megoldás működésére. 
 
 In the next section we would like to introduce our implementation. This will provide a deeper insight of the solution.
@@ -69,11 +69,15 @@ The social distance between the two person in 3 dimension space is calculated be
     \Delta d=\sqrt{(X_{1}-X_{2})^2 + (Y_{1}-Y_{2})^2+(Z_{1}-Z_{2})^2}
 \end{equation}
 
+Unfortunately we could not implement this, because the specifications of the publicly and freely accessible cameras are not available.
+Because of that we could only estimate the focal distance and the angle of view. Instead of that we used realtive distance determination.
+The distance between two pedestrians can be determined with two given threshold values. Ad hoc testing lead us to a relatively good solution.
+The problem with this is that the algorithm won't work properly with pedestrians in the distance. If we would like to release this for
+industrial purposes, the implementation of that is necessary beside of knowing the exact specifications of the camera we use.
 %Sajnos a végleges megoldásban ezt nem tudtuk implementálni, mert a nyilvánosan és ingyenesen felhasználható kamera képekhez tartozó specifikációk nem ismertek. Ezáltal a fokális távolságra, valamint a betekintési szögre csak becslést tudnánk adni. Ehelyett a végleges megvalósításban relatív távolság meghatározással dolgoztunk. Két küszöbértéket megadva lehet megállapítani a két ember közötti szociáis távolságot, ennek egy viszonylagosan jó meghatározásához ad-hoc tesztelés vezetett el. Probléma ebben az esetben, hogy a távolban lévő személyek esetén, viszont nem fog megfelelően működni így az algoritmus. Az iparban való alkalmazhatóságához, mindenképpen meg kell valósítani ezt a funkciót amellett, hogy teljes ismeretébe legyünk a kamerához tartozó specifikációkról.
 
 \section{Image slicing}
 %A videót képekre való bontása az OpenCV~\cite{opencv} nyílt forráskodó Python könyvtár segítségével valósítottuk meg. A bementi videónak megvizsgáljuk a képfrissítési rátáját és eszerint mintavételezzük a képeket. Itt fontos megemlíteni, hogy abban az esetben ha magas a képfrissítés akkor az egyes elmozdulási vektorok az embereknek kicsi, ezáltal az erőforrás feleslegesen van terhelve, csökkenteni kell a mintavétel méretét. Érdemes lenne megvizsgálni, hogyan lehet dinamikusan korrigálni a mintavételi rátát az elmozdulások függvényében, abban az esetben amikor az elmozdulási vektorok kicsik csökkentjük a mintavételi frekvenciát, amikor pedig nagy növeljük egy előre deffiniált küszöbértékig a mintavételi frekvenciát ami nem haladhatja meg a videó képfrissitését. A videó képfrissítését meghaladó frekvencia esetén redundáns képmetszeteket állítannánk elő amelyek plussz információt nem hordoznának magukban. 
-
 The slicing of the videos into frames was done with the open-source Python library, OpenCV~\cite{opencv}. We check the framerate of the input video and we take picture samples according to that. It is important to mention here, that if the framerate is high then the movement vectors are small of the people and the resources are burden unnecessarily, and decreases the number of samples. It would be worth to investigate, how could we correct the sample rate depending on the movement. If the movement vectors are small we decrease the sampling frequency, and if it is high we increase the sampling frequency until we hit a threshold but it can not exceed the video's framerate. If we would exceed the framerate of the video we would produce redundant image sections carrying no additional information.
 
 \begin{figure}[!ht]
@@ -82,6 +86,30 @@ The slicing of the videos into frames was done with the open-source Python libra
 \caption{Generating image flows from video}
 \label{fig:image_slicing} 
 \end{figure}
+
+\chapter{Research}
+There are quite a few other solutions published in 2020 regarding how social distancing could mitigate the risk of getting infected.
+We used some of the ideas to figure out where we want to go. The \cite{deepsocial} is trying to use a whole different aspect to
+determine the distance between two people: they try to transform the picture of what the camera sees, into a view that a bird would
+see, like the system would watch the pedestrians from above. With this projection to know the depth of the image is not needed, but
+we lose informations such as the height of the person. Also this does not carry important information because we only interested in
+the distance between two pedestrians. The results using the YOLOv3 and DeepSOCIAL model were not significantly different. The \cite{visbased}
+also uses a projection like the previous. But in this case they focus on the relationship between the pedestrians and the probability
+of getting infected and not on the actual distances between two people. The \cite{socdist} relying on YOLOv3 also builds the solutions
+seen in \cite{deepsocial}, talking about the bird view aspect. This solution does not include estimating the probability of infection
+and does not handle families or groups neither. The \cite{vissoc} is a must know about this topic. Basically it defines the public spheres
+of people and the probability of infection connected to that. The sphere becomes distorted depending on the movement vector of the pedestrian, 
+like a Doppler effect that should be taken into account. \cite{8717277} also offers an exceptional solution. They use polinomial approximitaion
+to determine the distance between two people, but this does not solve the problem of groups alone. Investigating and recognizing groups and
+families introduce a new problem in this topic. But this should be solved if the product want to be useful in real life. It should be handled for
+example if a child in a family is cycling around the family, and the distance between them changing dynamically. Because in this case the system should
+not go off.
+%Számos hasonló megoldást publikáltak a 2020-as év folyamán amikben a kockázat csökkentésének lehetőségét vizsgálják a szociális távolság megállapításában. Sok ikhletet a pontos irány tekintetében ezekből meritettünk. A \cite{deepsocial} egy teljesen más megközelítésből figyeli meg a problémát az emberek közötti távolság megállapítására, megpróbáljak a kamera képet leképezni egy madártávlatbeli képpé, mintha felülről szemléné a rendszer a gyalogosokat. Ezzel a projekcióval élve nem szükséges a kép mélységét ismerni, igaz igy olyan információkat vesztünk el mint a gyalogos magassága, viszont ez esetünkben nem számít csak a két gyalogos közötti távolság relatíve pontos meghatározása érdekel minket. A megoldás YOLOv3 és DeepSOCIAL modelt felhasználva is kirtékeltél szignifikáns különbség teljesítmény terén nem nagyon van a kettő model között.
+%A \cite{visbased} esetében egy hasonló felsőnézeti leképzést készítenek, ahol inkább jobban összpontosítanak az egyes emberek közötti kapcsolatok megvizsgálásával és a fertőzés kockázati valószínűségével mint a tényleges táv rekontstrukciójával. 
+%YOLOv3-ra építő megoldás \cite{socdist} ami a \cite{deepsocial}-ban látott megoldásokra épít a madárlesi távolság rekonstrukciójában. Ez a megoldás nem foglal magában becslést a fertőzés valószínűségére és továbbá nem kezeli az egybe tartozó családok/csoportok kérdéskörét sem. 
+%A \cite{vissoc} egy alap műként tekinthető ebben a témakörben, gyakorlatilag deffiniálja egy gyalogos publikus szféráját, illetve az ahhoz tartozó fertőzési kockázatokat. A gyalogos szférája az adott sebesség vektor függvényében eltorzul, mint egy Doppler effektus amivel szálmolni kell. 
+%Hasonlóan egy kiváló megoldást kinál a \cite{8717277} amiben polinomiális közelítés segítségével állapitják meg két gyalogos közötti távolságot, viszont ez sem kinál önmagában megoldást a csoportok megállapítására. 
+%A csoportokkal és családokkal kapcsolatos megállapitások új kutatási teret vet fel ebben a problémakörben. Ahhoz, hogy ez egy iparban használható alkalmazás legyen mindenképp vizsgálni kell a családok és csoportok szituációját. Le kell tudni kezelni azt az esetet amikor egy családban található kisgyermek elbiciklizik egy pár méterre a családtól majd vissza úgy, hogy ne jelezzünk veszélyt ekkor a gyermek és családról-
 
 \chapter{Solution}
 %Az elkészült megoldásról egy képkocka a \ref{fig:distance} ábrán látható. A képen három különböző szín látható. A kék azt jelzi, hogy az adott gyalogos biztonságban van nincs a közelében a küszöbértéken belüli másik gyalogos. A sárga szín azonosítja a veszélyesség lehetőségét, ez még maszk esetén nem feltétlen elégséges a fertőzés átadásához, viszont meg van már a kockázata. Ekkor sárga vonallal vannak összekötve az adott felek, jelezve a veszély forrássait. A piros színnel jelölt a más veszélyes zonában elhelyezkedő gyalogosokat, itt már előfordulhat az az eset is amikor egy maszk viselése amely nem rendelkezik elég réteggel nem állítja meg a fertőzés tovább terjedését. Fontos megint megjegyezni, hogy a térbeli elhelyezkedések esetén előfordulhat hibás becslés, mivel nem ismertük a kamerával kapcsolatos pontos specifikációkat. 
