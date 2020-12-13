@@ -8,6 +8,10 @@ Varsányi Botond AJ0PTT 33%
 
 Sáfrán Gergely FT6QWV 33%
 
+Video:
+
+https://youtu.be/D5XvlA03ZH4
+
 # Running procedure:
 
 First run the Setup part of the notebook. After these steps are finished it requires to restart the environment. After restarting the environment you can simply use shift + enter to run all the following blocks. They will autimatically download the dataset from github and from Google Drive.
