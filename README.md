@@ -1,12 +1,12 @@
 # ThisNoAll-DL-HomeWork
 
-Contirbutors (name, NEPTUN, workload):
+Contirbutors:
 
-Makara László Árpád G5YPX8 33%
+Makara László Árpád
 
-Varsányi Botond AJ0PTT 33%
+Varsányi Botond
 
-Sáfrán Gergely FT6QWV 33%
+Sáfrán Gergely
 
 Video:
 
